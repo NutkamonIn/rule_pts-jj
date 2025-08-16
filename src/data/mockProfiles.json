@@ -1,0 +1,12 @@
+[
+  {
+    "positionCode": "PN-001",
+    "jobTitle": "พยาบาลวิชาชีพ",
+    "department": "ICU",
+    "workUnit": "ER",
+    "education": "ปริญญาโท",
+    "hasSpecialCommand": true,
+    "specialty": "วิสัญญี",
+    "policyVersion": "2025-01"
+  }
+]
