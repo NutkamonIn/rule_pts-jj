@@ -3,13 +3,12 @@ import classifyRoutes from './api/classify';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
 import calculationRouters from './api/calculations';
-import { profile } from 'console';
 
 const app = Fastify({ logger: true });
 
 app.register(fastifyStatic, {
   root: path.join(__dirname, '..', 'public'),
-  prefix: '/', // optional: default '/' 
+  prefix: '/',
 });
 
 app.register(classifyRoutes);
