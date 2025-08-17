@@ -11,6 +11,7 @@ type Rule = {
   id: string;
   group: number;
   conditions: Condition[];
+  amount?: number;
 };
 
 

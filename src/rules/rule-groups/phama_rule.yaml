@@ -1,0 +1,23 @@
+rules: 
+  - id: pm_1
+    group: 1
+    conditions:
+      - field: jobTitle
+        equals: [
+         "เภสัชกร",
+         "ผู้อำนวยการเฉพาะด้าน(เภสัชกรรม)"
+         ]
+    amount: 1500
+
+  - id: pm_2
+    group: 2
+    conditions:
+      - field: hasSpecialCommand
+        equals: true
+      - field: specialty
+        equals: [
+           "การเตรียมยาหรือวิเคราะห์ยาเคมีบำบัด",
+           "ให้คำแนะนำด้านยาในกลุ่มโรคติดต่อร้ายแรง",
+           "งานคุ้มครองผู้บริโภคเกี่ยวกับการตวจจับและทำคดี"
+        ]
+    amount: 3000

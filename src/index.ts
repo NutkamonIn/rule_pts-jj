@@ -2,6 +2,8 @@ import Fastify from 'fastify';
 import classifyRoutes from './api/classify';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
+import calculationRouters from './api/calculations';
+import { profile } from 'console';
 
 const app = Fastify({ logger: true });
 
@@ -11,6 +13,7 @@ app.register(fastifyStatic, {
 });
 
 app.register(classifyRoutes);
+app.register(calculationRouters);
 
 app.listen({ port: 3000 }, (err, address) => {
   if (err) {

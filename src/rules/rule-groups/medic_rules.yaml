@@ -3,13 +3,24 @@ rules:
     group: 1
     conditions:
       - field: jobTitle
-        equals: ["นายแพทย์", "ผู้อำนวยการเฉพาะด้าน(แพทย์)"]
+        equals: [
+          "นายแพทย์",
+         "ผู้อำนวยการเฉพาะด้าน(แพทย์)",
+         ]
+    amount: 5000
 
   - id: dr_2
     group: 2
     conditions:
       - field: hasSpecialCommand
         equals: true
+      - field: degree
+        equals: [
+           "ปริญญาโท",
+           "ปริญญาเอก",
+        ]
+    amount: 10000
+
 
   - id: dr_3
     group: 3
@@ -34,5 +45,5 @@ rules:
           "สาขาเวชศาสตร์ป้องกัน (แขนงระบาดวิทยา)",
           "สาขาศัลยศาสตร์ทรวงอก",
         ]
-      
+    amount: 15000
 
