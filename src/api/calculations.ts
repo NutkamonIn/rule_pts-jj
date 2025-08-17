@@ -3,7 +3,7 @@ import { loadAllRulesFromDir } from "../rules/ruleEngine";
 
 export default async function calculationRouters(app: FastifyInstance) {
   app.post('/api/calculations', async (request, reply) => {
-    // ตรวจสอบว่า body เป็น object จริง
+
     const profile = request.body as Record<string, any>;
     if (!profile || typeof profile !== 'object') {
       return reply.status(400).send({ error: 'Invalid JSON body' });
