@@ -54,8 +54,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
+            // แสดงกลุ่มที่แนะนำ
             suggestedGroupEl.textContent = data.suggestedGroup || 'N/A';
             
+            // แสดงเรทเงิน
+            const salaryAmountEl = document.getElementById('salaryAmount');
+            const matchedRulesCountEl = document.getElementById('matchedRulesCount');
+            
+            // คำนวณเรทเงินจากกฎที่ตรงกัน
+            let totalAmount = 0;
+            if (data.matchedRuleDetails && data.matchedRuleDetails.length > 0) {
+                // หาเรทเงินสูงสุดจากกฎที่ตรงกัน
+                totalAmount = Math.max(...data.matchedRuleDetails.map(rule => rule.amount || 0));
+            }
+            
+            salaryAmountEl.textContent = totalAmount > 0 ? `${totalAmount.toLocaleString()} บาท` : 'ไม่ระบุ';
+            matchedRulesCountEl.textContent = data.matchedRules ? data.matchedRules.length : 0;
+
+            // แสดงข้อมูลโปรไฟล์ที่ส่งมา
+            document.getElementById('profileJobTitle').textContent = profile.jobTitle || '-';
+            document.getElementById('profileDepartment').textContent = profile.department || '-';
+            document.getElementById('profileDegree').textContent = profile.degree || '-';
+            document.getElementById('profileSpecialty').textContent = profile.specialty || '-';
+            document.getElementById('profileSpecialCommand').textContent = profile.hasSpecialCommand ? 'มี' : 'ไม่มี';
+            
+            // แสดงกฎที่ตรงกัน
             if (data.matchedRules && data.matchedRules.length > 0) {
                 data.matchedRules.forEach(rule => {
                     const li = document.createElement('li');
@@ -64,11 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else {
                 const li = document.createElement('li');
-                li.textContent = 'No specific rules matched.';
+                li.textContent = 'ไม่มีกฎที่ตรงกัน';
                 matchedRulesEl.appendChild(li);
             }
             
-            commentsEl.textContent = data.comments || 'No comments.';
+            // แสดงความคิดเห็น
+            if (Array.isArray(data.comments)) {
+                commentsEl.textContent = data.comments.join(', ');
+            } else {
+                commentsEl.textContent = data.comments || 'ไม่มีความคิดเห็น';
+            }
 
             // Show matchedRuleDetails
             const ruleDetailsDiv = document.getElementById('matchedRuleDetails');
@@ -77,12 +105,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.matchedRuleDetails && data.matchedRuleDetails.length > 0) {
                     data.matchedRuleDetails.forEach((rule, index) => {
                         const el = document.createElement('div');
-                        el.className = "p-2 bg-slate-50 border border-slate-300 rounded";
+                        el.className = "p-4 bg-slate-50 border border-slate-300 rounded mb-3";
+                        
+                        // สร้างรายการเงื่อนไข
+                        let conditionsHtml = '';
+                        if (rule.conditions && rule.conditions.length > 0) {
+                            conditionsHtml = rule.conditions.map(condition => {
+                                const value = Array.isArray(condition.equals) 
+                                    ? condition.equals.join(', ') 
+                                    : condition.equals;
+                                return `<li><strong>${condition.field}:</strong> ${value}</li>`;
+                            }).join('');
+                        }
+                        
                         el.innerHTML = `
-                            <p><strong>Rule ${index + 1}</strong></p>
-                            <p><strong>Group:</strong> ${rule.group}</p>
-                            <p><strong>Conditions:</strong></p>
-                            <pre class="text-xs whitespace-pre-wrap">${JSON.stringify(rule.conditions, null, 2)}</pre>
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold text-gray-800">กฎ ${rule.id}</h4>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                                    ${rule.amount ? rule.amount.toLocaleString() + ' บาท' : 'ไม่ระบุเงิน'}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2"><strong>กลุ่ม:</strong> ${rule.group}</p>
+                            <div class="text-sm">
+                                <p class="font-medium text-gray-700 mb-1">เงื่อนไข:</p>
+                                <ul class="list-disc list-inside text-gray-600 pl-2">
+                                    ${conditionsHtml}
+                                </ul>
+                            </div>
                         `;
                         ruleDetailsDiv.appendChild(el);
                     });
